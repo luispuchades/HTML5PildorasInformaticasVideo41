@@ -41,6 +41,22 @@ function comenzarArrastrar(e) {
 
 }
 
+//Definimos la función "entrando" para cuando accedamos a la zona de destino
+function entrando(e) {
+//Primero reseteamos el comportamiento que tiene por defecto el navegador respecto
+//a las funciones de Drag&Drop
+    e.preventDefault();
+    zonaDestino.style.background="rgba(8,252,25,.8)";
+}
+
+//Definimos en "saliendo" el comportamiento cuando se sale de la zona de destino
+function saliendo(e) {
+//Primero reseteamos el comportamiento que tiene por defecto el navegador respecto
+//a las funciones de Drag&Drop
+    e.preventDefault();
+//Indicamos que en caso de salir de la zona de destino, el fondo vuelva al blanco
+    zonaDestino.style.background="#FFFFFF";
+}
 
 //Definimos la función "soltado" para cuando hagamos "drop"
 function soltado(e) {
@@ -51,7 +67,15 @@ function soltado(e) {
 //getdata correspondiente a los datos que habíamos indicado que ibamos a
 //transferir con setData en la función anterior.
     zonaDestino.innerHTML = e.dataTransfer.getData("Text");
+}
 
+function terminado(e) {
+    var elemento
+//Almacenamos en la variable elemento el objeto target que ha desencadenado el 
+//evento e
+    elemento = e.target;
+//Ocultamos con css
+    elemento.style.visibility="hidden";
 }
 
 
@@ -61,9 +85,7 @@ function comenzar() {
 
 //Indicamos al navegador que en caso de "dragenter" no haga nada de lo que tiene
 // previsto en su programación para este evento.
-    zonaDestino.addEventListener("dragenter", function(e){
-        e.preventDefault();
-    },false);
+    zonaDestino.addEventListener("dragenter", entrando,false);
 
 //Indicamos al navegador que en caso de "dragover" no haga nada de lo que tiene
 // previsto en su programación para este evento.
@@ -71,10 +93,18 @@ function comenzar() {
         e.preventDefault();
     },false);
 
+//Le indicamos al navegador con "dranleave" que si sale de la zona correcta de
+//destino que vuelva al color de fondo original
+    zonaDestino.addEventListener("dragleave", saliendo, false);
+
 //Indicamos al navegador que en caso de "dragover" no haga nada de lo que tiene
 // previsto en su programación para este evento.
     zonaDestino.addEventListener("drop", soltado,false);
 
+//Le indicamos al navegador con "dragend" que cuando terminemos de arrastrar
+//nos elimine la foto inicial. Para ello pondremos al elemento de origen a la 
+//escucha
+    elemOrigen.addEventListener("dragend", terminado, false);
 
 }
 
